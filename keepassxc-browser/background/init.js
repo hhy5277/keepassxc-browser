@@ -7,6 +7,7 @@ keepass.migrateKeyRing().then(() => {
             keepass.connectToNative();
             keepass.generateNewKeyPair();
             keepass.changePublicKeys(null).then((pkRes) => {
+                keepass.enableAutomaticReconnect();
                 keepass.getDatabaseHash((gdRes) => {}, null);
             });
         });
@@ -89,7 +90,7 @@ const contextMenuItems = [
     { title: tr('contextMenuShowPasswordGenerator'), action: 'show_password_generator' }
 ];
 
-const menuContexts = ['editable'];
+const menuContexts = [ 'editable' ];
 
 if (isFirefox()) {
     menuContexts.push('password');
@@ -103,8 +104,8 @@ for (const item of contextMenuItems) {
         onclick: (info, tab) => {
             browser.tabs.sendMessage(tab.id, {
                 action: item.action
-            }).catch((e) => {
-                console.log(e);
+            }).catch((err) => {
+                console.log(err);
             });
         }
     });
